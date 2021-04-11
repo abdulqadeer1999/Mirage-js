@@ -25,12 +25,20 @@ function App() {
     <div className="App">
       <h1>Available Books</h1>
       <table>
+        <thead>
+          <th>Title</th>
+          <th>Author</th>
+        </thead>
+        <tbody>
+     
+    
         {books.map((bookObj,ind)=>{
           return(<tr key = {ind}>
             <td>{bookObj.title}</td>
             <td>{bookObj.author}</td>
           </tr>)
         })}
+      </tbody>
       </table>
     </div>
   );
