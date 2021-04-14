@@ -1,45 +1,60 @@
-
+import React, { useEffect, useState } from 'react';
 import './App.css';
 
-import { useEffect, useState } from 'react';
-
-
-
-
 function App() {
-  const [books, setBooks] = useState([{}])
 
-  useEffect (() => {
-  
+  const [books, setBooks] = useState([]);
+  useEffect(() => {
+    setInterval(() => {
       fetch("/api/books")
-      .then(res => res.json())
-      .then(data => {
-        console.log(data)
-        setBooks(data)
-      })
-  },[])
+        .then(res => res.json())
+        .then(data => {
+          setBooks(data);
+        })
+    }, 2000)
+  }, [])
 
+  const addBook = () => {
+    const title = prompt("Enter Book Title");
+    const author = prompt("Enter Book Author");
+
+    if (!title || !author)
+      return false;
+
+    fetch("/api/add", {
+      method: "POST",
+      body: JSON.stringify({ title, author })
+    })
+      .catch((error) => {
+        console.log("Error", error)
+      })
+  }
   if (!books.length)
-  return <h2>Loading...</h2>
+    return <h2>Loading..!</h2>
+
   return (
     <div className="App">
-      <h1>Available Books</h1>
-      <table>
+      <h1 style = {{color:"blueviolet"}}>Book Store </h1>
+      <h2>Available Books</h2>
+
+      <table border="1">
         <thead>
-          <th>Title</th>
-          <th>Author</th>
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+          </tr>
         </thead>
         <tbody>
-     
-    
-        {books.map((bookObj,ind)=>{
-          return(<tr key = {ind}>
-            <td>{bookObj.title}</td>
-            <td>{bookObj.author}</td>
-          </tr>)
-        })}
-      </tbody>
+          {books.map((bookObj, ind) => {
+            return (<tr key={ind}>
+              <td> {bookObj.title} </td>
+              <td>{bookObj.author}</td>
+            </tr>)
+          })}
+        </tbody>
       </table>
+
+      <button onClick={addBook}>Add Book</button>
     </div>
   );
 }
